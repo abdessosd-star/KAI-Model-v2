@@ -5,7 +5,12 @@ import { ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, ZAxis, Toolti
 import { Button } from './Button';
 import { Upload, Users, AlertTriangle, Code, Copy, Check, Globe, Settings, Sliders, Eye, EyeOff, Palette, Moon, Sun } from 'lucide-react';
 
+/**
+ * A dashboard component for organizations to view and manage employee assessment data.
+ * @returns {JSX.Element} - The rendered OrgDashboard component.
+ */
 export const OrgDashboard: React.FC = () => {
+  // --- STATE MANAGEMENT ---
   const [copied, setCopied] = useState(false);
   
   // Embed Configuration State
@@ -20,6 +25,8 @@ export const OrgDashboard: React.FC = () => {
     showArchetype: true
   });
 
+  // --- DERIVED STATE & CONSTANTS ---
+  // Prepares mock employee data for the scatter chart.
   const scatterData = MOCK_EMPLOYEES.map(emp => ({
     x: emp.kaiScore,
     y: emp.readinessScore,
@@ -28,9 +35,14 @@ export const OrgDashboard: React.FC = () => {
     archetype: emp.archetype
   }));
 
-  // Generate Embed Code based on configuration
+  // Generates the embed URL from the current window location.
   const currentUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kai-platform.com';
   
+  // --- HELPER FUNCTIONS ---
+  /**
+   * Generates the embed URL with the current configuration.
+   * @returns {string} The generated embed URL.
+   */
   const generateEmbedUrl = () => {
     const params = new URLSearchParams();
     params.append('ref', 'embed');
@@ -58,6 +70,10 @@ export const OrgDashboard: React.FC = () => {
   title="KAI Assessment">
 </iframe>`;
 
+  // --- EVENT HANDLERS ---
+  /**
+   * Copies the embed code to the clipboard.
+   */
   const handleCopyEmbed = () => {
     navigator.clipboard.writeText(embedCode);
     setCopied(true);

@@ -4,16 +4,42 @@ import { createAssessmentChat } from '../services/geminiService';
 import { Chat, GenerateContentResponse } from "@google/genai";
 import { Button } from './Button';
 
+/**
+ * Props for the ChatAssistant component.
+ * @interface ChatAssistantProps
+ */
 interface ChatAssistantProps {
+  /**
+   * The context data for the chat assistant.
+   * @type {any}
+   */
   contextData: any;
 }
 
+/**
+ * Represents a message in the chat.
+ * @interface Message
+ */
 interface Message {
+  /**
+   * The role of the message sender.
+   * @type {'user' | 'model'}
+   */
   role: 'user' | 'model';
+  /**
+   * The text content of the message.
+   * @type {string}
+   */
   text: string;
 }
 
+/**
+ * A chat assistant component that allows users to interact with a Gemini-powered chatbot.
+ * @param {ChatAssistantProps} props - The props for the ChatAssistant component.
+ * @returns {JSX.Element} - The rendered ChatAssistant component.
+ */
 export const ChatAssistant: React.FC<ChatAssistantProps> = ({ contextData }) => {
+  // --- STATE MANAGEMENT ---
   const [isOpen, setIsOpen] = useState(false);
   const [chat, setChat] = useState<Chat | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -21,6 +47,8 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ contextData }) => 
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // --- LIFECYCLE HOOKS ---
+  // Initialize the chat when the component mounts and context data is available.
   useEffect(() => {
     if (contextData && !chat) {
       const newChat = createAssessmentChat(contextData);
@@ -32,10 +60,15 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ contextData }) => 
     }
   }, [contextData, chat]);
 
+  // Scroll to the bottom of the message list when a new message is added.
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isOpen]);
 
+  // --- EVENT HANDLERS ---
+  /**
+   * Sends a message to the chat and handles the response.
+   */
   const handleSend = async () => {
     if (!input.trim() || !chat) return;
     

@@ -1,4 +1,8 @@
 
+/**
+ * Represents the different views of the application.
+ * @enum {string}
+ */
 export enum ViewState {
   LANDING = 'LANDING',
   ASSESSMENT = 'ASSESSMENT',
@@ -6,6 +10,10 @@ export enum ViewState {
   ORG_DASHBOARD = 'ORG_DASHBOARD'
 }
 
+/**
+ * Represents the different types of questions in the assessment.
+ * @enum {string}
+ */
 export enum QuestionType {
   SCALE = 'SCALE', // 1-5
   SLIDER = 'SLIDER', // 0-100%
@@ -14,6 +22,10 @@ export enum QuestionType {
   TEXT = 'TEXT' // Free text
 }
 
+/**
+ * Represents the settings for an embedded assessment.
+ * @interface EmbedSettings
+ */
 export interface EmbedSettings {
   theme?: 'light' | 'dark';
   primaryColor?: string;
@@ -22,6 +34,10 @@ export interface EmbedSettings {
   hideArchetype?: boolean;
 }
 
+/**
+ * Represents a question in the assessment.
+ * @interface Question
+ */
 export interface Question {
   id: string;
   text: string;
@@ -31,11 +47,19 @@ export interface Question {
   options?: { label: string; value: string | number }[]; 
 }
 
+/**
+ * Represents the state of the assessment.
+ * @interface AssessmentState
+ */
 export interface AssessmentState {
   answers: Record<string, number | string>; // questionId -> value
   isComplete: boolean;
 }
 
+/**
+ * Represents a user profile.
+ * @interface UserProfile
+ */
 export interface UserProfile {
   name: string;
   email: string;
@@ -43,6 +67,10 @@ export interface UserProfile {
   organization?: string;
 }
 
+/**
+ * Represents an archetype.
+ * @interface Archetype
+ */
 export interface Archetype {
   name: string; // e.g., "De Sceptische Bewaker"
   description: string;
@@ -51,6 +79,10 @@ export interface Archetype {
   opportunity: string;
 }
 
+/**
+ * Represents employee data.
+ * @interface EmployeeData
+ */
 export interface EmployeeData {
   id: string;
   name: string;
