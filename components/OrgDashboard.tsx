@@ -28,9 +28,6 @@ export const OrgDashboard: React.FC = () => {
     archetype: emp.archetype
   }));
 
-  // Generate Embed Code based on configuration
-  const currentUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kai-platform.com';
-  
   const generateEmbedUrl = () => {
     const params = new URLSearchParams();
     params.append('ref', 'embed');
@@ -46,7 +43,7 @@ export const OrgDashboard: React.FC = () => {
     if (!embedConfig.showCharts) params.append('hide_charts', 'true');
     if (!embedConfig.showArchetype) params.append('hide_archetype', 'true');
 
-    return `${currentUrl}?${params.toString()}`;
+    return `?${params.toString()}`;
   };
 
   const embedCode = `<iframe 
