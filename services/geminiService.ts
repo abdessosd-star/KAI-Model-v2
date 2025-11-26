@@ -5,6 +5,10 @@ import { GoogleGenAI, Chat } from "@google/genai";
 // to avoid exposing it in the frontend. For this demo, we use process.env.API_KEY.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
+/**
+ * Interface for the context data used to generate a roadmap.
+ * @interface ContextData
+ */
 interface ContextData {
   role: string;
   department: string;
@@ -17,6 +21,11 @@ interface ContextData {
   style: string;
 }
 
+/**
+ * Generates a 30-60-90 day roadmap using the Gemini AI model.
+ * @param {ContextData} ctx - The context data for the user.
+ * @returns {Promise<any>} A promise that resolves to the generated roadmap.
+ */
 export const generateRoadmap = async (ctx: ContextData) => {
   try {
     const model = 'gemini-2.5-flash';
@@ -78,6 +87,11 @@ export const generateRoadmap = async (ctx: ContextData) => {
   }
 };
 
+/**
+ * Creates a new chat instance with the Gemini AI model.
+ * @param {any} context - The context data for the chat.
+ * @returns {Chat} A new chat instance.
+ */
 export const createAssessmentChat = (context: any): Chat => {
   const systemInstruction = `
     You are a helpful AI assistant for the KAI-Model Platform. 

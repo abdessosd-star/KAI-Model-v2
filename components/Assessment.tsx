@@ -4,14 +4,45 @@ import { Question, QuestionType } from '../types';
 import { Button } from './Button';
 import { ArrowRight, CheckCircle2, ArrowLeft, Save } from 'lucide-react';
 
+/**
+ * Props for the Assessment component.
+ * @interface AssessmentProps
+ */
 interface AssessmentProps {
+  /**
+   * Callback function to be called when the assessment is completed.
+   * @param {Record<string, number | string>} answers - The answers to the assessment questions.
+   */
   onComplete: (answers: Record<string, number | string>) => void;
+  /**
+   * Callback function to be called when the user saves and exits the assessment.
+   */
   onSaveAndExit: () => void;
+  /**
+   * Initial answers for the assessment.
+   * @type {Record<string, number | string>}
+   * @optional
+   */
   initialAnswers?: Record<string, number | string>;
+  /**
+   * Initial step for the assessment.
+   * @type {number}
+   * @optional
+   */
   initialStep?: number;
+  /**
+   * The maximum number of questions to be asked in the assessment.
+   * @type {number}
+   * @optional
+   */
   questionLimit?: number;
 }
 
+/**
+ * A component that renders an assessment form.
+ * @param {AssessmentProps} props - The props for the Assessment component.
+ * @returns {JSX.Element | null} - The rendered Assessment component.
+ */
 export const Assessment: React.FC<AssessmentProps> = ({ 
   onComplete, 
   onSaveAndExit, 
@@ -19,10 +50,12 @@ export const Assessment: React.FC<AssessmentProps> = ({
   initialStep = 0,
   questionLimit
 }) => {
+  // --- STATE MANAGEMENT ---
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [answers, setAnswers] = useState<Record<string, number | string>>(initialAnswers);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // --- DERIVED STATE & CONSTANTS ---
   // Calculate effective total questions based on limit
   const totalQuestions = questionLimit ? Math.min(questionLimit, QUESTIONS.length) : QUESTIONS.length;
   const currentQuestion = QUESTIONS[currentStep];
@@ -38,6 +71,7 @@ export const Assessment: React.FC<AssessmentProps> = ({
   // Actually, simpler is: Progress = (Step + 1) / Total
   const progress = ((currentStep + 1) / totalQuestions) * 100;
 
+  // --- LIFECYCLE HOOKS ---
   // Auto-focus text inputs
   useEffect(() => {
     if (currentQuestion?.type === QuestionType.TEXT && inputRef.current) {
@@ -49,10 +83,18 @@ export const Assessment: React.FC<AssessmentProps> = ({
 
   if (!currentQuestion) return null;
 
+  // --- EVENT HANDLERS ---
+  /**
+   * Updates the answer for the current question in the state.
+   * @param value The new answer.
+   */
   const handleAnswer = (value: number | string) => {
     setAnswers(prev => ({ ...prev, [currentQuestion.id]: value }));
   };
 
+  /**
+   * Navigates to the next question or completes the assessment if it's the last question.
+   */
   const handleNext = () => {
     if (currentStep < totalQuestions - 1) {
       setCurrentStep(prev => prev + 1);
@@ -63,12 +105,18 @@ export const Assessment: React.FC<AssessmentProps> = ({
     }
   };
 
+  /**
+   * Navigates to the previous question.
+   */
   const handleBack = () => {
     if (currentStep > 0 && currentStep > (initialStep || 0)) {
       setCurrentStep(prev => prev - 1);
     }
   };
 
+  /**
+   * Saves the current assessment progress to local storage and exits.
+   */
   const handleSave = () => {
     const progressData = {
       step: currentStep,
@@ -79,6 +127,12 @@ export const Assessment: React.FC<AssessmentProps> = ({
     onSaveAndExit();
   };
 
+  // --- HELPER FUNCTIONS ---
+  /**
+   * Returns the Dutch label for a given question category.
+   * @param cat The category ID.
+   * @returns The display label.
+   */
   const getCategoryLabel = (cat: string) => {
     switch(cat) {
       case 'profile': return 'Profiel & Context';
@@ -90,7 +144,11 @@ export const Assessment: React.FC<AssessmentProps> = ({
     }
   };
 
-  // Helper to render specific input types
+  /**
+   * Renders the appropriate input element based on the question type.
+   * @param question The question to render an input for.
+   * @returns The JSX element for the input.
+   */
   const renderInput = (question: Question) => {
     switch (question.type) {
       case QuestionType.TEXT:

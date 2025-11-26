@@ -1,5 +1,9 @@
 import { Question, QuestionType, Archetype, EmployeeData } from './types';
 
+/**
+ * An array of assessment questions.
+ * @type {Question[]}
+ */
 export const QUESTIONS: Question[] = [
   // --- MODULE 0: PROFIEL & CONTEXT ---
   {
@@ -267,6 +271,10 @@ export const QUESTIONS: Question[] = [
   }
 ];
 
+/**
+ * A record of archetypes, keyed by their identifier.
+ * @type {Record<string, Archetype>}
+ */
 export const ARCHETYPES: Record<string, Archetype> = {
   ARCHITECT: {
     name: "De AI-Architect",
@@ -298,6 +306,10 @@ export const ARCHETYPES: Record<string, Archetype> = {
   }
 };
 
+/**
+ * An array of mock employee data.
+ * @type {EmployeeData[]}
+ */
 export const MOCK_EMPLOYEES: EmployeeData[] = [
   { id: '1', name: 'Jan Jansen', department: 'Finance', kaiScore: -5, readinessScore: 80, archetype: 'De Sceptische Bewaker' },
   { id: '2', name: 'Sophie de Vries', department: 'Marketing', kaiScore: 8, readinessScore: 90, archetype: 'De AI-Architect' },

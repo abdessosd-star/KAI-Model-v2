@@ -10,28 +10,64 @@ import {
 } from 'recharts';
 import { UserProfile, QuestionType, EmbedSettings } from '../types';
 
+/**
+ * Props for the Results component.
+ * @interface ResultsProps
+ */
 interface ResultsProps {
+  /**
+   * The answers from the assessment.
+   * @type {Record<string, number | string>}
+   */
   answers: Record<string, number | string>;
+  /**
+   * The current user profile.
+   * @type {UserProfile | null}
+   */
   currentUser: UserProfile | null;
+  /**
+   * Callback function for when the user signs up.
+   * @param {string} name - The name of the user.
+   * @param {string} email - The email of the user.
+   */
   onSignup: (name: string, email: string) => void;
+  /**
+   * Settings for embedding the results.
+   * @type {EmbedSettings}
+   * @optional
+   */
   embedSettings?: EmbedSettings;
 }
 
+/**
+ * A component that displays the results of the assessment.
+ * @param {ResultsProps} props - The props for the Results component.
+ * @returns {JSX.Element} - The rendered Results component.
+ */
 export const Results: React.FC<ResultsProps> = ({ answers, currentUser, onSignup, embedSettings = {} as EmbedSettings }) => {
+  // --- STATE MANAGEMENT ---
   const [roadmap, setRoadmap] = useState<any>(null);
   const [loadingRoadmap, setLoadingRoadmap] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   
-  // Theme helpers
+  // --- THEME & EMBED SETTINGS ---
+  // These settings are passed in via URL params and control the look and feel of the results page.
   const isDark = embedSettings.theme === 'dark';
   const primaryColor = embedSettings.primaryColor || '#2563eb'; // Default Blue
   
-  // Pre-fill name if available from assessment
+  // --- FORM STATE ---
+  // Pre-fill name if available from assessment.
   const initialName = (answers['prof_name'] as string) || '';
   const [formData, setFormData] = useState({ name: initialName, email: '' });
 
-  // --- Scoring Logic ---
+  // --- SCORING LOGIC ---
+  // This section calculates the user's scores based on their answers.
   
+  /**
+   * Calculates the sum of the values for a given category of questions.
+   * @param {string} category - The category of questions to sum.
+   * @returns {number} The sum of the values.
+   */
   const getCategorySum = (category: string) => {
     const relevantQuestions = QUESTIONS.filter(q => q.category === category && q.type !== 'TEXT' && q.type !== 'SELECT');
     let sum = 0;
@@ -121,6 +157,8 @@ export const Results: React.FC<ResultsProps> = ({ answers, currentUser, onSignup
   const userName = answers['prof_name'] as string || 'U';
   const anxietyScore = answers['sent_anxiety'] as number || 3;
 
+  // --- LIFECYCLE HOOKS ---
+  // Generates the roadmap when the user is signed in and the roadmap hasn't been generated yet.
   useEffect(() => {
     if (currentUser && !roadmap && !embedSettings.hideRoadmap) {
       setLoadingRoadmap(true);
@@ -145,6 +183,11 @@ export const Results: React.FC<ResultsProps> = ({ answers, currentUser, onSignup
     }
   }, [currentUser, archetype, roadmap, embedSettings.hideRoadmap]);
 
+  // --- EVENT HANDLERS ---
+  /**
+   * Handles the submission of the signup form.
+   * @param {React.FormEvent} e - The form event.
+   */
   const handleSignupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if(formData.name && formData.email) {

@@ -7,6 +7,11 @@ import { OrgDashboard } from './components/OrgDashboard';
 import { Button } from './components/Button';
 import { BrainCircuit, Building2, LogIn, PlayCircle, RotateCcw, X, Lock } from 'lucide-react';
 
+/**
+ * The main application component.
+ * It manages the view state and renders the appropriate component based on the current view.
+ * @returns {JSX.Element} The rendered App component.
+ */
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>(ViewState.LANDING);
   const [assessmentAnswers, setAssessmentAnswers] = useState<Record<string, number | string>>({});
