@@ -1,15 +1,41 @@
+
 import { Question, QuestionType, Archetype, EmployeeData } from './types';
 
-/**
- * An array of assessment questions.
- * @type {Question[]}
- */
+export const QUICK_SCAN_IDS = [
+  'prof_name',
+  'prof_email',
+  'prof_role',
+  'prof_industry',
+  'exp_data',
+  'exp_decision',
+  'exp_creative',
+  'style_reaction',
+  'style_deadline',
+  'read_freq',
+  'read_learning',
+  'sent_anxiety'
+];
+
 export const QUESTIONS: Question[] = [
   // --- MODULE 0: PROFIEL & CONTEXT ---
   {
     id: 'prof_name',
     text: 'Wat is uw voor- en achternaam?',
     subText: 'We gebruiken dit om uw rapport te personaliseren.',
+    type: QuestionType.TEXT,
+    category: 'profile'
+  },
+  {
+    id: 'prof_email',
+    text: 'Wat is uw zakelijk e-mailadres?',
+    subText: 'We sturen uw persoonlijke rapport en roadmap hiernaartoe.',
+    type: QuestionType.TEXT,
+    category: 'profile'
+  },
+  {
+    id: 'prof_org_code',
+    text: 'Heeft u een organisatiecode?',
+    subText: 'Vul deze hier in als u door uw werkgever bent uitgenodigd (bijv. DEMO2025). Anders kunt u dit leeg laten.',
     type: QuestionType.TEXT,
     category: 'profile'
   },
@@ -271,49 +297,143 @@ export const QUESTIONS: Question[] = [
   }
 ];
 
-/**
- * A record of archetypes, keyed by their identifier.
- * @type {Record<string, Archetype>}
- */
+// --- 10 EXTENDED ARCHETYPES ---
 export const ARCHETYPES: Record<string, Archetype> = {
-  ARCHITECT: {
-    name: "De AI-Architect",
-    description: "Een visionair met hoge digitale vaardigheden en een innovatieve stijl. U ziet AI niet als tool, maar als fundering voor nieuwe processen.",
+  // --- INNOVATORS (Style Score > 3) ---
+  VISIONARY_ARCHITECT: {
+    name: "De Visionary Architect",
+    description: "Een strategische pionier die niet alleen de technologie begrijpt, maar ook de organisatie-brede impact ziet. U bent de motor achter transformatie.",
     color: "#3b82f6", // Blue
-    risk: "Kan te snel gaan voor de organisatie, governance negeren en collega's 'kwijtraken' in hun enthousiasme.",
-    opportunity: "Strategische leiding nemen, nieuwe use-cases ontwerpen en de 'art of the possible' tonen."
+    risk: "Kan te ver voor de troepen uitlopen en de aansluiting met de operationele realiteit verliezen.",
+    opportunity: "Leid strategische pilots en ontwikkel de lange-termijn visie voor AI-integratie.",
+    behaviors: ["Denkt in systemen", "Experimenteert continu", "Negeert details voor het grote plaatje"],
+    strengths: ["Strategisch inzicht", "Hoge digitale geletterdheid", "Durf en visie"],
+    challenges: ["Ongeduld met trage processen", "Onderschatting van implementatierisico's"],
+    managementTips: ["Geef mandaat voor R&D", "Koppel aan een 'System Guardian' voor balans", "Vraag om concrete ROI cases"],
+    transformationDifficulty: 2,
+    generalActionPlan: "Focus op governance en schaalbaarheid. Uw uitdaging is niet de tech, maar de mensen mee krijgen."
   },
-  GUARDIAN: {
-    name: "De Sceptische Bewaker",
-    description: "De kwaliteitscontroleur. U begrijpt de technologie goed, maar uw adaptieve stijl zorgt voor een focus op veiligheid, precisie en integratie.",
+  STRATEGIC_INTEGRATOR: {
+    name: "De Strategic Integrator",
+    description: "De brug tussen wild idee en werkende oplossing. U heeft de innovatieve mindset maar combineert dit met voldoende pragmatisme om dingen gedaan te krijgen.",
+    color: "#6366f1", // Indigo
+    risk: "Kan vastlopen in het politieke spel tussen vernieuwing en behoud.",
+    opportunity: "Vertaal de visie van de Architect naar werkbare roadmaps voor afdelingen.",
+    behaviors: ["Zoekt naar 'fit'", "Verbindt mensen en technologie", "Vertaalt jargon naar business"],
+    strengths: ["Stakeholder management", "Procesinzicht", "Adaptieve intelligentie"],
+    challenges: ["Wordt soms gezien als 'te technisch' door business en 'te vaag' door IT"],
+    managementTips: ["Zet in als projectleider voor AI-transformatie", "Geef ruimte voor cross-functioneel werk"],
+    transformationDifficulty: 3,
+    generalActionPlan: "Identificeer high-impact use cases en begeleid teams bij de eerste adoptie."
+  },
+  CREATIVE_EXPERIMENTER: {
+    name: "De Creative Experimenter",
+    description: "Een enthousiaste ontdekker die AI ziet als een speeltuin. U genereert veel ideeën, maar mist soms de technische structuur om ze te borgen.",
+    color: "#8b5cf6", // Violet
+    risk: "Het blijft bij leuke demo's en 'shadow IT' zonder dat het veilig of schaalbaar is.",
+    opportunity: "Fungeer als inspirator; laat collega's zien wat er allemaal mogelijk is ('Wow-factor').",
+    behaviors: ["Probeert elke nieuwe tool", "Deelt enthousiast screenshots", "Negeert security regels soms"],
+    strengths: ["Creativiteit", "Enthousiasme", "Snelle adoptie"],
+    challenges: ["Gebrek aan focus", "Weinig oog voor compliance/security"],
+    managementTips: ["Faciliteer een veilige 'sandbox' omgeving", "Stel duidelijke kaders (wat mag wel/niet)"],
+    transformationDifficulty: 4,
+    generalActionPlan: "Leer de basis van data-security en focus op één tool die u echt meester wordt."
+  },
+
+  // --- ADAPTORS (Style Score < -3) ---
+  SYSTEM_GUARDIAN: {
+    name: "De System Guardian",
+    description: "De kwaliteitsbewaker. U omarmt technologie, maar alleen als deze veilig, bewezen en perfect geïntegreerd is. U voorkomt chaos.",
     color: "#10b981", // Emerald
-    risk: "Kan innovatie onbedoeld vertragen door te veel focus op risico's, compliance en 'hoe het hoort'.",
-    opportunity: "Validatie van AI-output, opstellen van richtlijnen, borgen van ethiek en veiligheid."
+    risk: "Kan innovatie vertragen door 'ja, maar...' houding en focus op wat er mis kan gaan.",
+    opportunity: "Word de eigenaar van AI Governance, validatie en kwaliteitscontrole.",
+    behaviors: ["Checkt de regels", "Test uitvoerig op fouten", "Documenteert processen"],
+    strengths: ["Nauwkeurigheid", "Risicobeheersing", "Processtabiliteit"],
+    challenges: ["Weerstand tegen snelle, ongeteste veranderingen"],
+    managementTips: ["Betrek vroeg bij het proces (niet pas aan het eind)", "Geef de rol van 'Safety Officer'"],
+    transformationDifficulty: 3,
+    generalActionPlan: "Ontwikkel frameworks voor validatie van AI-output. Uw kritische blik is goud waard."
   },
-  EXPLORER: {
-    name: "De Nieuwsgierige Verkenner",
-    description: "De enthousiasteling die graag wil veranderen en experimenteren, maar nog de technische diepgang mist om het schaalbaar te maken.",
+  PROCESS_OPTIMIZER: {
+    name: "De Process Optimizer",
+    description: "U zoekt naar efficiëntie binnen de bestaande kaders. AI is voor u geen revolutie, maar een betere schroevendraaier om het huidige werk sneller te doen.",
+    color: "#14b8a6", // Teal
+    risk: "Optimaliseert processen die misschien wel volledig overbodig worden (sub-optimalisatie).",
+    opportunity: "Implementeer 'Quick Wins' in administratieve en repetitieve taken.",
+    behaviors: ["Zoekt tijdwinst", "Automatiseert spreadsheets", "Houdt van stappenplannen"],
+    strengths: ["Efficiëntie", "Implementatiekracht", "Betrouwbaarheid"],
+    challenges: ["Moeite met 'Out of the box' denken", "Mist soms de strategische verschuiving"],
+    managementTips: ["Geef concrete tools voor automatisering", "Laat zien hoeveel tijd het bespaart"],
+    transformationDifficulty: 4,
+    generalActionPlan: "Kies één repetitief proces en automatiseer dit volledig. Deel de tijdwinst."
+  },
+  PRACTICAL_TRADITIONALIST: {
+    name: "De Practical Traditionalist",
+    description: "U waardeert vakmanschap en bewezen methoden. U bent niet tegen verandering, maar wilt eerst hard bewijs zien dat het werkt voordat u investeert.",
     color: "#f59e0b", // Amber
-    risk: "Het blijft bij 'leuke experimentjes' zonder structurele business impact of veilige implementatie.",
-    opportunity: "Cultureel ambassadeur die angst bij collega's wegneemt door laagdrempelige successen te delen."
+    risk: "Kan achteropraken als de marktstandaard verschuift. Risico op veroudering van skills.",
+    opportunity: "Gebruik AI om de 'saaie' taken weg te nemen zodat u zich kunt richten op uw expertise.",
+    behaviors: ["Wacht de kat uit de boom", "Vraagt om bewijs", "Leunt op ervaring"],
+    strengths: ["Diepe domeinkennis", "Stabiliteit", "Realiteitszin"],
+    challenges: ["Lage digitale veranderbereidheid", "Scepticisme"],
+    managementTips: ["Geef geen theoretische training, maar praktische demo's", "Koppel aan een Integrator"],
+    transformationDifficulty: 7,
+    generalActionPlan: "Begin klein. Gebruik AI niet om uw werk te vervangen, maar om u voor te bereiden (bijv. research)."
   },
-  TRADITIONALIST: {
-    name: "De Pragmatische Traditionalist",
-    description: "U hecht aan bewezen methoden en stabiliteit. U bent niet tegen AI, maar wilt eerst hard bewijs zien dat het uw huidige werk verbetert.",
+
+  // --- BRIDGE / MIDDLE (Style Score -3 to +3) ---
+  PRAGMATIC_BRIDGE: {
+    name: "De Pragmatic Bridge",
+    description: "De ideale teamspeler. U begrijpt zowel de snelle innovators als de voorzichtige adaptors. U bent digitaal vaardig en brengt rust in de transitie.",
+    color: "#0ea5e9", // Sky Blue
+    risk: "Kan in de knel komen door te proberen iedereen tevreden te houden.",
+    opportunity: "Fungeer als tolk en bemiddelaar tussen IT en de werkvloer.",
+    behaviors: ["Luistert naar beide kanten", "Zoekt het compromis", "Implementeert rustig"],
+    strengths: ["Diplomatie", "Teamcohesie", "Balans"],
+    challenges: ["Cijfert zichzelf soms weg", "Mist soms uitgesproken visie"],
+    managementTips: ["Zet in als teamleider of coach", "Gebruik om weerstand te verlagen"],
+    transformationDifficulty: 3,
+    generalActionPlan: "Faciliteer kennissessies waar u innovatie vertaalt naar praktische stappen voor het team."
+  },
+  COLLABORATIVE_PIVOT: {
+    name: "De Collaborative Pivot",
+    description: "U bent een sociaal dier dat meegaat met de groep. Als het team AI gebruikt, doet u mee. U heeft wat begeleiding nodig, maar staat open voor groei.",
+    color: "#84cc16", // Lime
+    risk: "Afhankelijk van de groepscultuur; in een conservatief team beweegt u niet mee.",
+    opportunity: "Creëer een 'kopgroep' waar deze persoon bij kan aansluiten om meegetrokken te worden.",
+    behaviors: ["Vraagt hulp", "Leert samen", "Volgt de leider"],
+    strengths: ["Samenwerking", "Leerbaarheid", "Loyaliteit"],
+    challenges: ["Gebrek aan eigen initiatief", "Technische onzekerheid"],
+    managementTips: ["Koppel aan een buddy", "Beloon groepssucces"],
+    transformationDifficulty: 5,
+    generalActionPlan: "Zoek een AI-buddy in uw team en doe samen een eerste project."
+  },
+  HESITANT_OBSERVER: {
+    name: "De Hesitant Observer",
+    description: "U kijkt de kat uit de boom. U heeft nog weinig ervaring met AI en vindt het allemaal wat spannend. U heeft veiligheid en tijd nodig.",
+    color: "#fbbf24", // Amber-Yellow
+    risk: "Stille weerstand ('Quiet quitting' op innovatie). Kan zich terugtrekken.",
+    opportunity: "Met de juiste, veilige begeleiding kan dit een zeer loyale gebruiker worden.",
+    behaviors: ["Stelt vragen over nut", "Is stil tijdens meetings", "Vermijdt nieuwe tools"],
+    strengths: ["Reflectie", "Voorzichtigheid"],
+    challenges: ["Angst voor het onbekende", "Lage digital skills"],
+    managementTips: ["Geen druk opleggen", "Focus op 'What's in it for me?'", "Simpele tools eerst"],
+    transformationDifficulty: 8,
+    generalActionPlan: "Volg eerst een basiscursus 'AI Awareness' om mythes te ontkrachten voordat u tools gaat gebruiken."
+  },
+
+  // --- SPECIAL CASE (High Anxiety) ---
+  RESISTANT_SKEPTIC: {
+    name: "De Resistant Skeptic",
+    description: "U voelt zich bedreigd door AI. U ziet het vooral als een risico voor uw baan of kwaliteit. Uw weerstand komt voort uit zorg, niet uit onwil.",
     color: "#ef4444", // Red
-    risk: "Risico op veroudering van vaardigheden als de marktstandaard sneller verschuift dan uw aanpassingsvermogen.",
-    opportunity: "Focus op 'Quick Wins': AI inzetten voor de saaie, repetitieve taken zodat u zich kunt richten op uw vakmanschap."
+    risk: "Actieve weerstand, negatieve sfeer in het team, sabotage van implementatie.",
+    opportunity: "Als de angst wordt weggenomen, kan deze persoon de scherpste criticus (en dus kwaliteitsbewaker) worden.",
+    behaviors: ["Uit openlijk kritiek", "Weigert deelname", "Benadrukt fouten van AI"],
+    strengths: ["Kritisch denken", "Bescherming van waarden"],
+    challenges: ["Hoge AI-angst", "Vastgeroeste patronen"],
+    managementTips: ["Luister naar de zorgen (erkenning)", "Garandeer baanzekerheid/rol", "Laat zien dat AI 'augmentatie' is, geen vervanging"],
+    transformationDifficulty: 10,
+    generalActionPlan: "Focus op psychologische veiligheid. Ga in gesprek over uw rol en hoe uw menselijke kwaliteiten uniek blijven."
   }
 };
-
-/**
- * An array of mock employee data.
- * @type {EmployeeData[]}
- */
-export const MOCK_EMPLOYEES: EmployeeData[] = [
-  { id: '1', name: 'Jan Jansen', department: 'Finance', kaiScore: -5, readinessScore: 80, archetype: 'De Sceptische Bewaker' },
-  { id: '2', name: 'Sophie de Vries', department: 'Marketing', kaiScore: 8, readinessScore: 90, archetype: 'De AI-Architect' },
-  { id: '3', name: 'Pieter Bakker', department: 'Operations', kaiScore: -2, readinessScore: 30, archetype: 'De Pragmatische Traditionalist' },
-  { id: '4', name: 'Emma Visser', department: 'Sales', kaiScore: 6, readinessScore: 40, archetype: 'De Nieuwsgierige Verkenner' },
-  { id: '5', name: 'Ahmet Yilmaz', department: 'IT', kaiScore: 4, readinessScore: 95, archetype: 'De AI-Architect' },
-];

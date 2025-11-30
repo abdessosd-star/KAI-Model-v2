@@ -1,32 +1,10 @@
 import React from 'react';
 
-/**
- * Props for the Button component.
- * @interface ButtonProps
- * @extends React.ButtonHTMLAttributes<HTMLButtonElement>
- */
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  /**
-   * The variant of the button.
-   * @type {'primary' | 'secondary' | 'outline' | 'ghost'}
-   * @optional
-   * @default 'primary'
-   */
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  /**
-   * The size of the button.
-   * @type {'sm' | 'md' | 'lg'}
-   * @optional
-   * @default 'md'
-   */
   size?: 'sm' | 'md' | 'lg';
 }
 
-/**
- * A customizable button component.
- * @param {ButtonProps} props - The props for the Button component.
- * @returns {JSX.Element} - The rendered Button component.
- */
 export const Button: React.FC<ButtonProps> = ({ 
   children, 
   variant = 'primary', 

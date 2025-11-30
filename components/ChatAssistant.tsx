@@ -1,45 +1,20 @@
+
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageSquare, Send, X, Loader2, Sparkles } from 'lucide-react';
+import { MessageSquare, Send, X, Loader2, Sparkles, ChevronDown } from 'lucide-react';
 import { createAssessmentChat } from '../services/geminiService';
 import { Chat, GenerateContentResponse } from "@google/genai";
 import { Button } from './Button';
 
-/**
- * Props for the ChatAssistant component.
- * @interface ChatAssistantProps
- */
 interface ChatAssistantProps {
-  /**
-   * The context data for the chat assistant.
-   * @type {any}
-   */
   contextData: any;
 }
 
-/**
- * Represents a message in the chat.
- * @interface Message
- */
 interface Message {
-  /**
-   * The role of the message sender.
-   * @type {'user' | 'model'}
-   */
   role: 'user' | 'model';
-  /**
-   * The text content of the message.
-   * @type {string}
-   */
   text: string;
 }
 
-/**
- * A chat assistant component that allows users to interact with a Gemini-powered chatbot.
- * @param {ChatAssistantProps} props - The props for the ChatAssistant component.
- * @returns {JSX.Element} - The rendered ChatAssistant component.
- */
 export const ChatAssistant: React.FC<ChatAssistantProps> = ({ contextData }) => {
-  // --- STATE MANAGEMENT ---
   const [isOpen, setIsOpen] = useState(false);
   const [chat, setChat] = useState<Chat | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -47,8 +22,6 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ contextData }) => 
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // --- LIFECYCLE HOOKS ---
-  // Initialize the chat when the component mounts and context data is available.
   useEffect(() => {
     if (contextData && !chat) {
       const newChat = createAssessmentChat(contextData);
@@ -60,15 +33,10 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ contextData }) => 
     }
   }, [contextData, chat]);
 
-  // Scroll to the bottom of the message list when a new message is added.
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isOpen]);
 
-  // --- EVENT HANDLERS ---
-  /**
-   * Sends a message to the chat and handles the response.
-   */
   const handleSend = async () => {
     if (!input.trim() || !chat) return;
     
@@ -93,7 +61,7 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ contextData }) => 
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-xl transition-all hover:scale-105 z-50 flex items-center gap-2"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-xl transition-all hover:scale-105 z-40 flex items-center gap-2"
       >
         <MessageSquare size={24} />
         <span className="font-bold hidden md:inline">Chat over resultaten</span>
@@ -102,16 +70,17 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ contextData }) => 
   }
 
   return (
-    <div className="fixed bottom-6 right-6 w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col z-50 overflow-hidden animate-fade-in-up h-[500px] md:h-[600px]">
+    <div className="fixed inset-0 md:inset-auto md:bottom-6 md:right-6 w-full md:max-w-md bg-white md:rounded-2xl shadow-2xl md:border border-slate-200 flex flex-col z-50 overflow-hidden animate-fade-in-up h-full md:h-[600px]">
       {/* Header */}
-      <div className="bg-slate-900 p-4 flex items-center justify-between text-white">
+      <div className="bg-slate-900 p-4 flex items-center justify-between text-white flex-shrink-0">
         <div className="flex items-center gap-2">
             <Sparkles size={18} className="text-blue-400" />
             <span className="font-bold">KAI Assistent</span>
         </div>
         <div className="flex gap-2">
-            <button onClick={() => setIsOpen(false)} className="hover:text-slate-300 transition-colors">
-                <X size={20} />
+            <button onClick={() => setIsOpen(false)} className="hover:text-slate-300 transition-colors p-1">
+                <ChevronDown size={24} className="md:hidden" />
+                <X size={20} className="hidden md:block" />
             </button>
         </div>
       </div>
@@ -141,11 +110,11 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ contextData }) => 
       </div>
 
       {/* Input */}
-      <div className="p-3 bg-white border-t border-slate-100">
+      <div className="p-3 bg-white border-t border-slate-100 flex-shrink-0 mb-safe-area">
         <div className="flex gap-2">
             <input 
                 type="text" 
-                className="flex-1 bg-slate-100 border-0 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-600 outline-none text-slate-800"
+                className="flex-1 bg-slate-100 border-0 rounded-lg px-4 py-3 md:py-2 focus:ring-2 focus:ring-blue-600 outline-none text-slate-800 text-base"
                 placeholder="Stel een vraag..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -158,7 +127,7 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ contextData }) => 
                 disabled={!input.trim() || isLoading}
                 className="px-3"
             >
-                <Send size={18} />
+                <Send size={20} />
             </Button>
         </div>
       </div>
